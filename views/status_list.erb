@@ -1,0 +1,17 @@
+﻿<a href="/status/post" class="btn btn-primary">Add status</a>
+<ul id="todo-list" class="unstyled">
+  <% @statuses.each do |status| %>
+    <li id="<%= status[:id] %>">
+      <span class="item">
+        <%= status[:name] %>
+      </span>
+      <span class="pull-right">
+        <form action="/status/delete/<%= status[:id] %>" method="post">
+          <a href="/status/post/<%= status[:id] %>" class="btn btn-warning">Edit</a>
+          <input type="submit" class="btn btn-danger" value="Delete", onClick="return confirm('destroy OK?');">
+        </form>
+      </span>
+    </li>
+  <% end %>
+</ul>
+<a href="/status/post" class="btn btn-primary">Add status</a>

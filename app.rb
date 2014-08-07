@@ -106,3 +106,39 @@ post '/tag/delete/:id' do
 end
 # tag #
 
+
+# status #
+get '/status' do
+  @statuses = Status.all
+  erb :status_list
+end
+
+get '/status/post/?:id?' do
+  if target_id = params[:id]
+    @title = "Edit status"
+    @status = Status.first(:id => target_id)
+    @form_action = "/status/post/#{target_id}"
+  else
+    @title = "Add status"
+    @form_action = "/status/post"
+  end
+  erb :status_form
+end
+
+post '/status/post/?:id?' do
+  if target_id = params[:id]
+    @status = Status.first(:id => target_id)
+    @status.update(:name => params[:name])
+  else
+    Status.create(:name => params[:name])
+  end
+  redirect '/status'
+end
+
+post '/status/delete/:id' do
+  # TODO: destroy statusItem, too.
+  Status.first(:id => params[:id]).destroy
+  redirect '/status'
+end
+# status #
+
