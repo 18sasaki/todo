@@ -1,0 +1,16 @@
+﻿<a href="/tag/new" class="btn btn-primary">Add tag</a>
+<ul id="todo-list" class="unstyled">
+  <% @tags.each do |tag| %>
+    <li id="<%= tag[:id] %>">
+      <span class="item">
+        <%= tag[:name] %>
+      </span>
+      <span class="pull-right">
+        <form action="/tag/delete/<%= tag[:id] %>" method="post">
+          <input type="submit" class="btn btn-danger" value="Delete", onClick="return confirm('destroy OK?');">
+        </form>
+      </span>
+    </li>
+  <% end %>
+</ul>
+<a href="/tag/new" class="btn btn-primary">Add tag</a>

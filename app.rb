@@ -33,6 +33,7 @@ class Status
 end
 DataMapper.finalize.auto_upgrade!
 
+# item #
 get '/' do
   @items = Item.all(:conditions => {done: false}, :order => :created.desc)
   redirect '/new' if @items.empty?
@@ -67,3 +68,28 @@ post '/done' do
   value = item.done ? 'done' : 'not done'
   { :id => params[:id], :status => value }.to_json
 end
+# item #
+
+
+# tag #
+get '/tag' do
+  @tags = Tag.all(:order => :name)
+  erb :tag_list
+end
+
+get '/tag/new' do
+  @title = "Add tag"
+  erb :tag_new
+end
+
+post '/tag/create' do
+  Tag.create(:name => params[:name])
+  redirect '/tag'
+end
+
+post '/tag/delete/:id' do
+  Tag.first(:id => params[:id]).destroy
+  redirect '/tag'
+end
+# tag #
+
