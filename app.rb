@@ -77,17 +77,30 @@ get '/tag' do
   erb :tag_list
 end
 
-get '/tag/new' do
-  @title = "Add tag"
-  erb :tag_new
+get '/tag/post/?:id?' do
+  if target_id = params[:id]
+    @title = "Edit tag"
+    @tag = Tag.first(:id => target_id)
+    @form_action = "/tag/post/#{target_id}"
+  else
+    @title = "Add tag"
+    @form_action = "/tag/post"
+  end
+  erb :tag_form
 end
 
-post '/tag/create' do
-  Tag.create(:name => params[:name])
+post '/tag/post/?:id?' do
+  if target_id = params[:id]
+    @tag = Tag.first(:id => target_id)
+    @tag.update(:name => params[:name])
+  else
+    Tag.create(:name => params[:name])
+  end
   redirect '/tag'
 end
 
 post '/tag/delete/:id' do
+  # TODO: destroy TagItem, too.
   Tag.first(:id => params[:id]).destroy
   redirect '/tag'
 end
