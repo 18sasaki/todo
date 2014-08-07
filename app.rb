@@ -50,13 +50,8 @@ post '/new' do
   redirect '/'
 end
 
-get '/delete/:id' do
-  @item = Item.first(:id => params[:id])
-  erb :delete
-end
-
 post '/delete/:id' do
-  Item.first(:id => params[:id]).destroy if params.has_key?("ok")
+  Item.first(:id => params[:id]).destroy
   redirect '/'
 end
 
@@ -136,7 +131,6 @@ post '/status/post/?:id?' do
 end
 
 post '/status/delete/:id' do
-  # TODO: destroy statusItem, too.
   Status.first(:id => params[:id]).destroy
   redirect '/status'
 end

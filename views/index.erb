@@ -6,8 +6,10 @@
         <%= item[:done] ? "<del>#{item[:content]}</del>" : item[:content] %>
       </span>
       <span class="pull-right">
-        <a href="#" class="btn done"><%= item[:done] ? "Not done" : "Done"%></a>
-        <a href="/delete/<%= item[:id] %>" class="btn btn-danger">Delete</a>
+        <form action="/delete/<%= item[:id] %>" method="post">
+          <a href="#" class="btn done"><%= item[:done] ? "Not done" : "Done"%></a>
+          <input type="submit" class="btn btn-danger" value="Delete", onClick="return confirm('destroy OK?');">
+        </form>
       </span>
     </li>
   <% end %>
