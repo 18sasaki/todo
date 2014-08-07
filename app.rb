@@ -8,9 +8,28 @@ DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/todo_list.db")
 class Item
   include DataMapper::Resource
   property :id, Serial
+  property :parent_id, Integer
   property :content, Text, :required => true
+  property :memo, Text
   property :done, Boolean, :required => true, :default => false
+  property :status_id, Integer, :default => 0
   property :created, DateTime
+end
+class Tag
+  include DataMapper::Resource
+  property :id, Serial
+  property :name, Text, :required => true
+end
+class ItemTag
+  include DataMapper::Resource
+  property :id, Serial
+  property :item_id, Integer, :required => true
+  property :tag_id, Integer, :required => true
+end
+class Status
+  include DataMapper::Resource
+  property :id, Serial
+  property :name, Text, :required => true
 end
 DataMapper.finalize.auto_upgrade!
 
