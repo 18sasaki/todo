@@ -15,7 +15,7 @@ end
 DataMapper.finalize.auto_upgrade!
 
 get '/' do
-  @items = Item.all(:order => :created.desc)
+  @items = Item.all(:conditions => {done: false}, :order => :created.desc)
   redirect '/new' if @items.empty?
   erb :index
 end
