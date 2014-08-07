@@ -1,4 +1,5 @@
-﻿<ul id="todo-list" class="unstyled">
+﻿<a href="/new" class="btn btn-primary">Add todo item</a>
+<ul id="todo-list" class="unstyled">
   <% @items.each do |item| %>
     <li id="<%= item[:id] %>">
       <span class="item">
