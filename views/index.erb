@@ -1,4 +1,4 @@
-﻿<a href="/new" class="btn btn-primary">Add todo item</a>
+﻿<a href="/post" class="btn btn-primary">Add todo item</a>
 <ul id="todo-list" class="unstyled">
   <% @items.each do |item| %>
     <li id="<%= item[:id] %>">
@@ -8,10 +8,11 @@
       <span class="pull-right">
         <form action="/delete/<%= item[:id] %>" method="post">
           <a href="#" class="btn done"><%= item[:done] ? "Not done" : "Done"%></a>
+          <a href="/post/<%= item[:id] %>" class="btn btn-warning">Edit</a>
           <input type="submit" class="btn btn-danger" value="Delete", onClick="return confirm('destroy OK?');">
         </form>
       </span>
     </li>
   <% end %>
 </ul>
-<a href="/new" class="btn btn-primary">Add todo item</a>
+<a href="/post" class="btn btn-primary">Add todo item</a>

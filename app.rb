@@ -40,13 +40,30 @@ get '/' do
   erb :index
 end
 
-get '/new' do
-  @title = "Add todo item"
-  erb :new
+get '/show/:id' do
+  @item = Item.first(:id => params[:id])
+  erb :show
 end
 
-post '/new' do
-  Item.create(:content => params[:content], :created => Time.now)
+get '/post/?:id?' do
+  if target_id = params[:id]
+    @title = "Edit todo item"
+    @item = Item.first(:id => target_id)
+    @form_action = "/post/#{target_id}"
+  else
+    @title = "Add todo item"
+    @form_action = "/post"
+  end
+  erb :form
+end
+
+post '/post/?:id?' do
+  if target_id = params[:id]
+    @item = Item.first(:id => target_id)
+    @item.update(:content => params[:content], :memo => params[:memo])
+  else
+    Item.create(:content => params[:content], :memo => params[:memo], :created => Time.now)
+  end
   redirect '/'
 end
 

@@ -1,0 +1,16 @@
+﻿<form action=<%= @form_action %> class="form-inline" method="POST">
+  <table class="table">
+    <tr>
+      <td align='right'><span style='color:red;'>*</span>content: </td>
+      <td><input type="text" placeholder="Todo item" name="content" style='width:400px' value=<%= @item ? @item.content : '' %>></td>
+    </tr>
+    <tr>
+      <td align='right'>memo: </td>
+      <td><textarea class="form-control" name="memo" rows="5" value=<%= @item ? @item.memo : '' %>></textarea></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><button type="submit" class="btn">Post</button></td>
+    </tr>
+  </table>
+</form>
