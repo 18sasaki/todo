@@ -7,7 +7,7 @@
           <input type="checkbox"
                  name="tag_ids[]"
                  value=<%= tag.id %>
-                 <%= 'checked' if @tag_ids && @tag_ids.include?(tag.id) %>>
+                 <%= 'checked' if (@tag_ids && @tag_ids.include?(tag.id)) %>>
           <%= tag.name %>
         <% end %>
       </td>

@@ -14,6 +14,8 @@ class Item
   property :done, Boolean, :required => true, :default => false
   property :status_id, Integer, :default => 0
   property :created, DateTime
+
+  has n, :item_tags
 end
 class Tag
   include DataMapper::Resource
@@ -25,6 +27,8 @@ class ItemTag
   property :id, Serial
   property :item_id, Integer, :required => true
   property :tag_id, Integer, :required => true
+
+  belongs_to :item
 end
 class Status
   include DataMapper::Resource
@@ -171,3 +175,13 @@ post '/status/delete/:id' do
   redirect '/status'
 end
 # status #
+
+helpers do
+  def tag_map
+    {}.tap do |tag_map|
+      Tag.all(:order => :name).each do |tag|
+        tag_map[tag.id] = tag.name
+      end
+    end
+  end
+end

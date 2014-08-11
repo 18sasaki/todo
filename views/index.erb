@@ -2,6 +2,11 @@
 <ul id="todo-list" class="unstyled">
   <% @items.each do |item| %>
     <li id="<%= item[:id] %>">
+      <% item.item_tags.each do |item_tag| %>
+        <span class="btn btn-xs btn-info" style='cursor: defaultgst' >
+          <%= tag_map[item_tag.tag_id] %>
+        </span>
+      <% end %>
       <span class="item">
         <%= item[:done] ? "<del>#{item[:content]}</del>" : item[:content] %>
       </span>
