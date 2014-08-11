@@ -41,15 +41,15 @@ get '/' do
 end
 
 get '/show/:id' do
-  @item = Item.first(:id => params[:id])
+  @item = Item.get(params[:id])
   erb :show
 end
 
 get '/post/?:id?' do
-  @all_tags = Tag.all
+  @all_tags = Tag.all(:order => :name)
   if target_id = params[:id]
     @title = "Edit todo item"
-    @item = Item.first(:id => target_id)
+    @item = Item.get(target_id)
     @tag_ids = ItemTag.all(:item_id => target_id).collect(&:tag_id)
     @form_action = "/post/#{target_id}"
   else
@@ -61,7 +61,7 @@ end
 
 post '/post/?:id?' do
   if target_id = params[:id]
-    @item = Item.first(:id => target_id)
+    @item = Item.get(target_id)
     @item.update(:content => params[:content], :memo => params[:memo])
     ItemTag.all(:item_id => target_id).each do |item_tag_data|
       # if exist tag_id : delete from [tag_ids], or not : destroy ItemTag
@@ -74,7 +74,7 @@ post '/post/?:id?' do
     end
   else
     created_item = Item.create(:content => params[:content], :memo => params[:memo], :created => Time.now)
-    params[:tag_ids].each do |tag_id|
+    (params[:tag_ids] || []).each do |tag_id|
       ItemTag.create(:item_id => created_item.id, :tag_id => tag_id)
     end
   end
@@ -82,7 +82,7 @@ post '/post/?:id?' do
 end
 
 post '/delete/:id' do
-  Item.first(:id => params[:id]).destroy
+  Item.get(params[:id]).destroy
   ItemTag.all(:item_id => params[:id]).each do |item_tag_data|
     item_tag_data.destroy
   end
@@ -90,7 +90,7 @@ post '/delete/:id' do
 end
 
 post '/done' do
-  item = Item.first(:id => params[:id])
+  item = Item.get(params[:id])
   item.done = !item.done
   item.save
   content_type 'application/json'
@@ -109,7 +109,7 @@ end
 get '/tag/post/?:id?' do
   if target_id = params[:id]
     @title = "Edit tag"
-    @tag = Tag.first(:id => target_id)
+    @tag = Tag.get(target_id)
     @form_action = "/tag/post/#{target_id}"
   else
     @title = "Add tag"
@@ -120,7 +120,7 @@ end
 
 post '/tag/post/?:id?' do
   if target_id = params[:id]
-    @tag = Tag.first(:id => target_id)
+    @tag = Tag.get(target_id)
     @tag.update(:name => params[:name])
   else
     Tag.create(:name => params[:name])
@@ -129,7 +129,7 @@ post '/tag/post/?:id?' do
 end
 
 post '/tag/delete/:id' do
-  Tag.first(:id => params[:id]).destroy
+  Tag.get(params[:id]).destroy
   ItemTag.all(:tag_id => params[:id]).each do |item_tag_data|
     item_tag_data.destroy
   end
@@ -147,7 +147,7 @@ end
 get '/status/post/?:id?' do
   if target_id = params[:id]
     @title = "Edit status"
-    @status = Status.first(:id => target_id)
+    @status = Status.get(target_id)
     @form_action = "/status/post/#{target_id}"
   else
     @title = "Add status"
@@ -158,7 +158,7 @@ end
 
 post '/status/post/?:id?' do
   if target_id = params[:id]
-    @status = Status.first(:id => target_id)
+    @status = Status.get(target_id)
     @status.update(:name => params[:name])
   else
     Status.create(:name => params[:name])
@@ -167,8 +167,7 @@ post '/status/post/?:id?' do
 end
 
 post '/status/delete/:id' do
-  Status.first(:id => params[:id]).destroy
+  Status.get(params[:id]).destroy
   redirect '/status'
 end
 # status #
-
