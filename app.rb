@@ -46,9 +46,11 @@ get '/show/:id' do
 end
 
 get '/post/?:id?' do
+  @all_tags = Tag.all
   if target_id = params[:id]
     @title = "Edit todo item"
     @item = Item.first(:id => target_id)
+    @tag_ids = ItemTag.all(:item_id => target_id).collect(&:tag_id)
     @form_action = "/post/#{target_id}"
   else
     @title = "Add todo item"
@@ -61,14 +63,29 @@ post '/post/?:id?' do
   if target_id = params[:id]
     @item = Item.first(:id => target_id)
     @item.update(:content => params[:content], :memo => params[:memo])
+    ItemTag.all(:item_id => target_id).each do |item_tag_data|
+      # if exist tag_id : delete from [tag_ids], or not : destroy ItemTag
+      unless params[:tag_ids].delete(item_tag_data.tag_id)
+        item_tag_data.destroy
+      end
+    end
+    params[:tag_ids].each do |new_tag_id|
+      ItemTag.create(:item_id => target_id, :tag_id => new_tag_id)
+    end
   else
-    Item.create(:content => params[:content], :memo => params[:memo], :created => Time.now)
+    created_item = Item.create(:content => params[:content], :memo => params[:memo], :created => Time.now)
+    params[:tag_ids].each do |tag_id|
+      ItemTag.create(:item_id => created_item.id, :tag_id => tag_id)
+    end
   end
   redirect '/'
 end
 
 post '/delete/:id' do
   Item.first(:id => params[:id]).destroy
+  ItemTag.all(:item_id => params[:id]).each do |item_tag_data|
+    item_tag_data.destroy
+  end
   redirect '/'
 end
 
@@ -112,8 +129,10 @@ post '/tag/post/?:id?' do
 end
 
 post '/tag/delete/:id' do
-  # TODO: destroy TagItem, too.
   Tag.first(:id => params[:id]).destroy
+  ItemTag.all(:tag_id => params[:id]).each do |item_tag_data|
+    item_tag_data.destroy
+  end
   redirect '/tag'
 end
 # tag #

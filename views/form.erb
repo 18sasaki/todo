@@ -1,6 +1,18 @@
 ﻿<form action=<%= @form_action %> class="form-inline" method="POST">
   <table class="table">
     <tr>
+      <td align='right'>tag: </td>
+      <td>
+        <% @all_tags.each do |tag| %>
+          <input type="checkbox"
+                 name="tag_ids[]"
+                 value=<%= tag.id %>
+                 <%= 'checked' if @tag_ids && @tag_ids.include?(tag.id) %>>
+          <%= tag.name %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
       <td align='right'><span style='color:red;'>*</span>content: </td>
       <td><input type="text" placeholder="Todo item" name="content" style='width:400px' value=<%= @item ? @item.content : '' %>></td>
     </tr>
