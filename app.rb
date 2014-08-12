@@ -119,11 +119,19 @@ end
 
 # tag #
 get '/tag' do
-  @tags = Tag.all(:order => :name)
+  all_tags = Tag.all
+  @tags = {}.tap do |tag_set|
+            all_tags.each do |tag|
+              tag_style = tag.tag_style ? tag.tag_style : TagStyle.new({name: 'Other', color: 'gray'})
+              tag_set[tag_style] ||= []
+              tag_set[tag_style] << tag
+            end
+          end
   erb :tag_list
 end
 
 get '/tag/post/?:id?' do
+  @tag_styles = TagStyle.all
   if target_id = params[:id]
     @title = "Edit tag"
     @tag = Tag.get(target_id)
@@ -138,9 +146,9 @@ end
 post '/tag/post/?:id?' do
   if target_id = params[:id]
     @tag = Tag.get(target_id)
-    @tag.update(:name => params[:name])
+    @tag.update(:name => params[:name], :tag_style_id => params[:tag_style_id])
   else
-    Tag.create(:name => params[:name])
+    Tag.create(:name => params[:name], :tag_style_id => params[:tag_style_id])
   end
   redirect '/tag'
 end
@@ -158,7 +166,6 @@ end
 # tag_style #
 get '/tag_style' do
   @tag_styles = TagStyle.all
-p @tag_styles
   erb :tag_style_list
 end
 

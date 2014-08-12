@@ -1,13 +1,13 @@
 ﻿<a href="/tag_style/post" class="btn btn-primary">Add tag_style</a>
 <ul id="todo-list" class="unstyled">
   <% @tag_styles.each do |tag_style| %>
-    <li id="<%= tag_style[:id] %>">
-      <span class="btn" style='background-color:<%= tag_style[:color] %>'>
-        <%= tag_style[:name] %>
+    <li id="<%= tag_style.id %>">
+      <span class="btn" style='background-color:<%= tag_style.color %>'>
+        <%= tag_style.name %>
       </span>
       <span class="pull-right">
-        <form action="/tag_style/delete/<%= tag_style[:id] %>" method="post">
-          <a href="/tag_style/post/<%= tag_style[:id] %>" class="btn btn-warning">Edit</a>
+        <form action="/tag_style/delete/<%= tag_style.id %>" method="post">
+          <a href="/tag_style/post/<%= tag_style.id %>" class="btn btn-warning">Edit</a>
           <input type="submit" class="btn btn-danger" value="Delete", onClick="return confirm('destroy OK?');">
         </form>
       </span>
