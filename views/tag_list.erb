@@ -1,9 +1,13 @@
-﻿<a href="/tag/post" class="btn btn-primary">Add tag</a>
+﻿<a href="/tag_style/post" class="btn btn-primary">Create new TagStyle</a>
 <hr>
-<% @tags.each do |tag_style, tag_list| %>
+<% @tag_styles.each do |tag_style| %>
   <span class="btn" style='background-color:<%= tag_style.color %>;cursor:default'><%= tag_style.name %></span>
+  <a href="/tag/post?tag_style_id=<%= tag_style.id %>" class="btn btn-primary">Add tag to <%= tag_style.name %></a>
+  <a href="/tag_style/post/<%= tag_style.id %>" class="btn btn-warning">Edit</a>
+  <a href="/tag_style/delete/<%= tag_style.id %>" class="btn btn-danger", onClick="return confirm('destroy OK?');">Delete</a>
+
   <ul id="todo-list" class="unstyled">
-    <% tag_list.each do |tag| %>
+    <% tag_style.tags.each do |tag| %>
       <li id="<%= tag.id %>">
         <span>
           <%= tag.name %>

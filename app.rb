@@ -124,24 +124,19 @@ end
 
 # tag #
 get '/tag' do
-  all_tags = Tag.all
-  @tags = {}.tap do |tag_set|
-            all_tags.each do |tag|
-              tag_set[tag.tag_style] ||= []
-              tag_set[tag.tag_style] << tag
-            end
-          end
+  @tag_styles = TagStyle.all
   erb :tag_list
 end
 
 get '/tag/post/?:id?' do
-  @tag_styles = TagStyle.all
   if target_id = params[:id]
-    @title = "Edit tag"
+    @title = "Edit Tag"
     @tag = Tag.get(target_id)
+    @tag_style = @tag.tag_style
     @form_action = "/tag/post/#{target_id}"
   else
-    @title = "Add tag"
+    @title = "Add Tag"
+    @tag_style = TagStyle.get(params[:tag_style_id])
     @form_action = "/tag/post"
   end
   erb :tag_form
@@ -168,18 +163,13 @@ end
 
 
 # tag_style #
-get '/tag_style' do
-  @tag_styles = TagStyle.all
-  erb :tag_style_list
-end
-
 get '/tag_style/post/?:id?' do
   if target_id = params[:id]
-    @title = "Edit tag_style"
+    @title = "Edit TagStyle"
     @tag_style = TagStyle.get(target_id)
     @form_action = "/tag_style/post/#{target_id}"
   else
-    @title = "Add tag_style"
+    @title = "Add TagStyle"
     @form_action = "/tag_style/post"
   end
   erb :tag_style_form
@@ -195,8 +185,8 @@ post '/tag_style/post/?:id?' do
   redirect '/tag_style'
 end
 
-post '/tag_style/delete/:id' do
-  TagStyle.get(params[:id]).destroy
+get '/tag_style/delete/:id' do
+  TagStyle.get(params[:id]).destroy!
   Tag.all(:tag_style_id => params[:id]).each do |tag|
     tag.update(:tag_style_id => nil)
   end
@@ -213,11 +203,11 @@ end
 
 get '/status/post/?:id?' do
   if target_id = params[:id]
-    @title = "Edit status"
+    @title = "Edit Status"
     @status = Status.get(target_id)
     @form_action = "/status/post/#{target_id}"
   else
-    @title = "Add status"
+    @title = "Add Status"
     @form_action = "/status/post"
   end
   erb :status_form

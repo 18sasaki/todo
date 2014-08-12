@@ -1,13 +1,13 @@
 ﻿<form action=<%= @form_action %> class="form-inline" method="POST">
+  <span class="btn" style='background-color:<%= @tag_style.color %>;cursor:default'><%= @tag_style.name %></span>
   <input type="text" placeholder="Tag name" name="name" style='width:200px' value=<%= @tag ? @tag.name : '' %>>
-  <select name="tag_style_id" class="form-control">
-    <option value=''>Please Select</option>
-    <% @tag_styles.each do |tag_style| %>
-      <option value='<%= tag_style.id %>' style='background-color:<%= tag_style.color %>'<%= ' selected' if @tag && @tag.tag_style_id == tag_style.id %>>
-        <%= tag_style.name %>
-      </option>
-    <% end %>
-  </select>
+  <input type="hidden" name="tag_style_id" value=<%= @tag_style.id %>>
 
   <button type="submit" class="btn">Post</button>
 </form>
+
+<ul>
+  <% @tag_style.tags.each do |tag| %>
+    <li><%= tag.name %></li>
+  <% end %>
+</ui>
