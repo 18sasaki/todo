@@ -20,7 +20,7 @@ end
 class Tag
   include DataMapper::Resource
   property :id, Serial
-  property :tag_style_id, Integer
+  property :tag_style_id, Integer, :required => true
   property :name, Text, :required => true
 
   has n, :item_tags
@@ -122,9 +122,8 @@ get '/tag' do
   all_tags = Tag.all
   @tags = {}.tap do |tag_set|
             all_tags.each do |tag|
-              tag_style = tag.tag_style ? tag.tag_style : TagStyle.new({name: 'Other', color: 'gray'})
-              tag_set[tag_style] ||= []
-              tag_set[tag_style] << tag
+              tag_set[tag.tag_style] ||= []
+              tag_set[tag.tag_style] << tag
             end
           end
   erb :tag_list

@@ -3,7 +3,7 @@
   <% @items.each do |item| %>
     <li id="<%= item[:id] %>">
       <% item.item_tags.each do |item_tag| %>
-        <span class="btn btn-xs btn-info" style='cursor: defaultgst' >
+        <span class="btn btn-xs" style='background-color:<%= item_tag.tag.tag_style.color %>;cursor: default' >
           <%= tag_map[item_tag.tag_id] %>
         </span>
       <% end %>
