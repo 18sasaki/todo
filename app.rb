@@ -63,7 +63,12 @@ get '/show/:id' do
 end
 
 get '/post/?:id?' do
-  @all_tags = Tag.all(:order => :name)
+  @tags = {}.tap do |tag_set|
+            Tag.all.each do |tag|
+              tag_set[tag.tag_style] ||= []
+              tag_set[tag.tag_style] << tag
+            end
+          end
   if target_id = params[:id]
     @title = "Edit todo item"
     @item = Item.get(target_id)
@@ -99,7 +104,7 @@ post '/post/?:id?' do
 end
 
 post '/delete/:id' do
-  Item.get(params[:id]).destroy
+  Item.get(params[:id]).destroy!
   ItemTag.all(:item_id => params[:id]).each do |item_tag_data|
     item_tag_data.destroy
   end
