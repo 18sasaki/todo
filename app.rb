@@ -20,7 +20,11 @@ end
 class Tag
   include DataMapper::Resource
   property :id, Serial
+  property :tag_style_id, Integer
   property :name, Text, :required => true
+
+  has n, :item_tags
+  belongs_to :tag_style
 end
 class ItemTag
   include DataMapper::Resource
@@ -29,6 +33,15 @@ class ItemTag
   property :tag_id, Integer, :required => true
 
   belongs_to :item
+  belongs_to :tag
+end
+class TagStyle
+  include DataMapper::Resource
+  property :id, Serial
+  property :color, Text, :required => true
+  property :name, Text, :required => true
+
+  has n, :tags
 end
 class Status
   include DataMapper::Resource
@@ -140,6 +153,45 @@ post '/tag/delete/:id' do
   redirect '/tag'
 end
 # tag #
+
+
+# tag_style #
+get '/tag_style' do
+  @tag_styles = TagStyle.all
+p @tag_styles
+  erb :tag_style_list
+end
+
+get '/tag_style/post/?:id?' do
+  if target_id = params[:id]
+    @title = "Edit tag_style"
+    @tag_style = TagStyle.get(target_id)
+    @form_action = "/tag_style/post/#{target_id}"
+  else
+    @title = "Add tag_style"
+    @form_action = "/tag_style/post"
+  end
+  erb :tag_style_form
+end
+
+post '/tag_style/post/?:id?' do
+  if target_id = params[:id]
+    @tag_style = TagStyle.get(target_id)
+    @tag_style.update(:name => params[:name], :color => params[:color])
+  else
+    TagStyle.create(:name => params[:name], :color => params[:color])
+  end
+  redirect '/tag_style'
+end
+
+post '/tag_style/delete/:id' do
+  TagStyle.get(params[:id]).destroy
+  Tag.all(:tag_style_id => params[:id]).each do |tag|
+    tag.update(:tag_style_id => nil)
+  end
+  redirect '/tag_style'
+end
+# tag_style #
 
 
 # status #
