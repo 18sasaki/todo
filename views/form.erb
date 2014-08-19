@@ -6,8 +6,8 @@
         <table>
           <% @tags.each do |tag_style, tag_list| %>
             <tr>
-              <td style='background-color:<%= tag_style.color %>;'>
-                <%= tag_style.name %>
+              <td style='background-color:<%= tag_style.color %>;' align='right'>
+                <%= tag_style.name %>&nbsp;
               </td>
               <td>
                 <% tag_list.each do |tag| %>

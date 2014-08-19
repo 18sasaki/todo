@@ -22,15 +22,13 @@
         </td>
         <td>
           <% tag_list.each do |tag| %>
-            <label>
+            <label style='font-weight:normal'>
+              &nbsp;
               <input type="checkbox"
                      id='<%= tag.id %>'
                      class="tag_checkbox"
                      value='<%= tag.id %>'
-                     <% if @target_ids.include?(tag.id.to_s) %>
-                       checked='checked'
-                     <% end %>
-                     >
+                     <%= 'checked' if @target_ids.include?(tag.id.to_s) %>>
               <%= tag.name %>
             </label>
           <% end %>
