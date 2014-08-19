@@ -1,11 +1,16 @@
 ﻿<script type="text/javascript">
   <!--//
-  // $(function() {
-  //   $('.tag_checkbox').click(function() {
-  //     $('#target_tag_id').val($(this).val());
-  //     document.click_tag.submit();
-  //   });
-  // });
+  $(function() {
+    // $('.tag_checkbox').click(function() {
+    //   $('#target_tag_id').val($(this).val());
+    //   document.click_tag.submit();
+    // });
+    $('#clear_btn').click(function() {
+      $('#other_tag_ids').val('');
+      $('#with_done_flg').val('true');
+      document.click_tag.submit();
+    });
+  });
   -->
 </script>
 
@@ -26,7 +31,6 @@
               &nbsp;
               <input type="checkbox"
                      id='<%= tag.id %>'
-                     class="tag_checkbox"
                      value='<%= tag.id %>'
                      <%= 'checked' if @target_ids.include?(tag.id.to_s) %>
                      onclick='$("#target_tag_id").val(<%= tag.id %>);submit();'>
@@ -47,6 +51,12 @@
                  <%= 'checked' if @with_done_flg %>
                  onclick='submit();'>
           完了済も表示する
+        </label>
+        <label style='font-weight:normal'>
+          &nbsp;
+          <span class="btn btn-xs btn-danger" id="clear_btn" <%= 'disabled' if (@target_ids.empty? && !@with_done_flg) %>>
+            チェックを外す
+          </span>
         </label>
       </td>
     </tr>
