@@ -4,6 +4,10 @@ require 'data_mapper'
 require 'sinatra/reloader'
 require 'date'
 
+configure do
+  enable :sessions
+end
+
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/todo_list.db")
 class Item
   include DataMapper::Resource
@@ -52,15 +56,10 @@ DataMapper.finalize.auto_upgrade!
 
 # item #
 get '/' do
-  # TODO: session使う
-  @target_ids = []
-  @tags = {}.tap do |tag_set|
-            Tag.all.each do |tag|
-              tag_set[tag.tag_style] ||= []
-              tag_set[tag.tag_style] << tag
-            end
-          end
-  @items = Item.all(order: :created.desc).all(done: false)
+  @target_ids = session[:target_ids] || []
+  @items      = get_items(@target_ids, false)
+  @all_tags   = get_all_tags
+
   redirect '/new' if @items.empty?
   erb :index
 end
@@ -68,27 +67,42 @@ end
 post '/' do
   others = params[:other_tag_ids].try(:split, ',') || []
   target = params[:target_tag_id]
+
   @target_ids = if others.delete(target)
                   others
                 else
                   others << target
                 end
-  @items = if @target_ids.empty?
-             Item.all(order: :created.desc).all(done: false)
-           else
-             @target_ids.map do |tag_id|
-               Item.all(order: :created.desc)
-                   .all(Item.item_tags.tag_id => tag_id)
-             end.inject(:&).all(done: false) || []
-           end
+  session[:target_ids] = @target_ids
+  @items    = get_items(@target_ids, false)
+  @all_tags = get_all_tags
 
-  @tags = {}.tap do |tag_set|
-            Tag.all.each do |tag|
-              tag_set[tag.tag_style] ||= []
-              tag_set[tag.tag_style] << tag
-            end
-          end
   erb :index
+end
+
+def get_items(target_ids, with_done_flg=false)
+  base_items = Item.all(order: :created.desc)
+  items = if target_ids.empty?
+            base_items
+          else
+            target_ids.map do |tag_id|
+              base_items.tag_is(tag_id)
+            end.inject(:&)
+          end
+  (with_done_flg ? items : items.all(done: with_done_flg)) || []
+end
+
+def Item.tag_is(tag_id)
+  all(Item.item_tags.tag_id => tag_id)
+end
+
+def get_all_tags
+  {}.tap do |tag_set|
+    Tag.all.each do |tag|
+      tag_set[tag.tag_style] ||= []
+      tag_set[tag.tag_style] << tag
+    end
+  end
 end
 
 get '/show/:id' do
@@ -97,16 +111,13 @@ get '/show/:id' do
 end
 
 get '/post/?:id?' do
-  @tags = {}.tap do |tag_set|
-            Tag.all.each do |tag|
-              tag_set[tag.tag_style] ||= []
-              tag_set[tag.tag_style] << tag
-            end
-          end
+  @all_tags = get_all_tags
+
   if target_id = params[:id]
-    @title = "Edit todo item"
-    @item = Item.get(target_id)
+    @item    = Item.get(target_id)
     @tag_ids = ItemTag.all(:item_id => target_id).collect(&:tag_id)
+
+    @title = "Edit todo item"
     @form_action = "/post/#{target_id}"
   else
     @title = "Add todo item"
@@ -164,13 +175,14 @@ end
 
 get '/tag/post/?:id?' do
   if target_id = params[:id]
-    @title = "Edit Tag"
     @tag = Tag.get(target_id)
+
     @tag_style = @tag.tag_style
+    @title = "Edit Tag"
     @form_action = "/tag/post/#{target_id}"
   else
-    @title = "Add Tag"
     @tag_style = TagStyle.get(params[:tag_style_id])
+    @title = "Add Tag"
     @form_action = "/tag/post"
   end
   erb :tag_form
@@ -199,8 +211,9 @@ end
 # tag_style #
 get '/tag_style/post/?:id?' do
   if target_id = params[:id]
-    @title = "Edit TagStyle"
     @tag_style = TagStyle.get(target_id)
+
+    @title = "Edit TagStyle"
     @form_action = "/tag_style/post/#{target_id}"
   else
     @title = "Add TagStyle"
@@ -237,8 +250,9 @@ end
 
 get '/status/post/?:id?' do
   if target_id = params[:id]
-    @title = "Edit Status"
     @status = Status.get(target_id)
+
+    @title = "Edit Status"
     @form_action = "/status/post/#{target_id}"
   else
     @title = "Add Status"

@@ -15,7 +15,7 @@
   <input type='hidden' id='other_tag_ids' name='other_tag_ids' value='<%= @target_ids.join(',') %>'>
   <input type='hidden' id='target_tag_id' name='target_tag_id' value=''>
   <table>
-    <% @tags.each do |tag_style, tag_list| %>
+    <% @all_tags.each do |tag_style, tag_list| %>
       <tr>
         <td style='background-color:<%= tag_style.color %>;' align='right'>
           <%= tag_style.name %>&nbsp;

@@ -4,7 +4,7 @@
       <td align='right'>tag: </td>
       <td>
         <table>
-          <% @tags.each do |tag_style, tag_list| %>
+          <% @all_tags.each do |tag_style, tag_list| %>
             <tr>
               <td style='background-color:<%= tag_style.color %>;' align='right'>
                 <%= tag_style.name %>&nbsp;
