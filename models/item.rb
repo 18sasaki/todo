@@ -1,10 +1,9 @@
 
 get '/' do
-  @target_ids = session[:target_ids] || []
-  @items      = Item.get_items(@target_ids, false)
-  @tag_set    = Tag.get_tag_set
-
-  redirect '/new' if @items.empty?
+  @target_ids    = session[:target_ids] || []
+  @with_done_flg = session[:with_done_flg]
+  @items         = Item.get_items(@target_ids, @with_done_flg)
+  @tag_set       = Tag.get_tag_set
   erb :index
 end
 
@@ -12,13 +11,17 @@ post '/' do
   others = params[:other_tag_ids].try(:split, ',') || []
   target = params[:target_tag_id]
 
-  @target_ids = if others.delete(target)
+  @target_ids = if target.empty? || others.delete(target)
                   others
                 else
                   others << target
                 end
-  session[:target_ids] = @target_ids
-  @items    = Item.get_items(@target_ids, false)
+  @with_done_flg = params[:with_done_flg] == 'false'
+
+  session[:target_ids]    = @target_ids
+  session[:with_done_flg] = @with_done_flg
+
+  @items    = Item.get_items(@target_ids, @with_done_flg)
   @tag_set  = Tag.get_tag_set
 
   erb :index
