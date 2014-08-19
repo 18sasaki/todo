@@ -216,7 +216,7 @@ post '/tag_style/post/?:id?' do
   else
     TagStyle.create(:name => params[:name], :color => params[:color])
   end
-  redirect '/tag_style'
+  redirect '/tag'
 end
 
 get '/tag_style/delete/:id' do
@@ -224,7 +224,7 @@ get '/tag_style/delete/:id' do
   Tag.all(:tag_style_id => params[:id]).each do |tag|
     tag.update(:tag_style_id => nil)
   end
-  redirect '/tag_style'
+  redirect '/tag'
 end
 # tag_style #
 

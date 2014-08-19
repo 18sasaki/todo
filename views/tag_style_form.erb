@@ -1,5 +1,5 @@
 ﻿<form action=<%= @form_action %> class="form-inline" method="POST">
   <input type="text" placeholder="Tag name" name="name" style='width:200px' value=<%= @tag_style ? @tag_style.name : '' %>>
-  <input type="text" placeholder="Tag color" name="color" style='width:100px' value=<%= @tag_style ? @tag_style.color : '' %>>
+  <input type="color" placeholder="Tag color" name="color" style='width:100px' value=<%= @tag_style ? @tag_style.color : '' %>>
   <button type="submit" class="btn">Post</button>
 </form>
