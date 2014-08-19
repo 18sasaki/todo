@@ -52,8 +52,42 @@ DataMapper.finalize.auto_upgrade!
 
 # item #
 get '/' do
-  @items = Item.all(:conditions => {done: false}, :order => :created.desc)
+  # TODO: session使う
+  @target_ids = []
+  @tags = {}.tap do |tag_set|
+            Tag.all.each do |tag|
+              tag_set[tag.tag_style] ||= []
+              tag_set[tag.tag_style] << tag
+            end
+          end
+  @items = Item.all(order: :created.desc).all(done: false)
   redirect '/new' if @items.empty?
+  erb :index
+end
+
+post '/' do
+  others = params[:other_tag_ids].try(:split, ',') || []
+  target = params[:target_tag_id]
+  @target_ids = if others.delete(target)
+                  others
+                else
+                  others << target
+                end
+  @items = if @target_ids.empty?
+             Item.all(order: :created.desc).all(done: false)
+           else
+             @target_ids.map do |tag_id|
+               Item.all(order: :created.desc)
+                   .all(Item.item_tags.tag_id => tag_id)
+             end.inject(:&).all(done: false) || []
+           end
+
+  @tags = {}.tap do |tag_set|
+            Tag.all.each do |tag|
+              tag_set[tag.tag_style] ||= []
+              tag_set[tag.tag_style] << tag
+            end
+          end
   erb :index
 end
 
