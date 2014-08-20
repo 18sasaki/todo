@@ -1,27 +1,27 @@
 
 get '/' do
-  @target_ids    = session[:target_ids] || []
-  @with_done_flg = session[:with_done_flg] || false
-  @items         = Item.get_items(@target_ids, @with_done_flg)
-  @tag_set       = Tag.get_tag_set
+  @target_tag_ids = session[:target_tag_ids] || []
+  @with_done_flg  = session[:with_done_flg] || false
+  @items          = Item.get_items(@target_tag_ids, @with_done_flg)
+  @tag_set        = Tag.get_tag_set
   erb :index
 end
 
 post '/' do
-  others = params[:other_tag_ids].try(:split, ',') || []
-  target = params[:target_tag_id]
+  others  = params[:other_tag_ids].try(:split, ',') || []
+  clicked = params[:clicked_tag_id]
 
-  @target_ids = if target.empty? || others.delete(target)
-                  others
-                else
-                  others << target
-                end
+  @target_tag_ids = if clicked.empty? || others.delete(clicked)
+                      others
+                    else
+                      others << clicked
+                    end
   @with_done_flg = (params[:with_done_flg] == 'false')
 
-  session[:target_ids]    = @target_ids
-  session[:with_done_flg] = @with_done_flg
+  session[:target_tag_ids] = @target_tag_ids
+  session[:with_done_flg]  = @with_done_flg
 
-  @items    = Item.get_items(@target_ids, @with_done_flg)
+  @items    = Item.get_items(@target_tag_ids, @with_done_flg)
   @tag_set  = Tag.get_tag_set
 
   erb :index
@@ -42,6 +42,8 @@ get '/post/?:id?' do
     @title = "Edit todo item"
     @form_action = "/post/#{target_id}"
   else
+    @tag_ids = session[:target_tag_ids].collect(&:to_i)
+
     @title = "Add todo item"
     @form_action = "/post"
   end
@@ -88,12 +90,12 @@ post '/done' do
 end
 
 class Item
-  def self.get_items(target_ids, with_done_flg=false)
+  def self.get_items(target_tag_ids, with_done_flg=false)
     base_items = Item.all(order: :created.desc)
-    items = if target_ids.empty?
+    items = if target_tag_ids.empty?
               base_items
             else
-              target_ids.map do |tag_id|
+              target_tag_ids.map do |tag_id|
                 base_items.tag_is(tag_id)
               end.inject(:&)
             end
