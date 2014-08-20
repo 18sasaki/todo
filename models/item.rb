@@ -1,7 +1,7 @@
 
 get '/' do
   @target_ids    = session[:target_ids] || []
-  @with_done_flg = session[:with_done_flg]
+  @with_done_flg = session[:with_done_flg] || false
   @items         = Item.get_items(@target_ids, @with_done_flg)
   @tag_set       = Tag.get_tag_set
   erb :index
@@ -16,7 +16,7 @@ post '/' do
                 else
                   others << target
                 end
-  @with_done_flg = params[:with_done_flg] == 'false'
+  @with_done_flg = (params[:with_done_flg] == 'false')
 
   session[:target_ids]    = @target_ids
   session[:with_done_flg] = @with_done_flg
