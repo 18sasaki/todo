@@ -10,6 +10,7 @@
       $('#with_done_flg').val('true');
       document.click_tag.submit();
     });
+    $('.item').balloon({ position: "bottom right" });
   });
   -->
 </script>
@@ -73,7 +74,7 @@
           <%= tag_map[item_tag.tag_id] %>
         </span>
       <% end %>
-      <span class="item">
+      <span class="item" title='<%= item[:memo] %>'>
         <%= item[:done] ? "<del>#{item[:content]}</del>" : item[:content] %>
       </span>
       <span class="pull-right">
