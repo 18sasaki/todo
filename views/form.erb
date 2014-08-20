@@ -56,7 +56,7 @@
     </tr>
     <tr>
       <td align='right'>memo: </td>
-      <td><textarea class="form-control" name="memo" rows="5"><%= @item ? @item.memo : '' %></textarea></td>
+      <td><textarea class="form-control" name="memo" rows="5" style='width:80%;'><%= @item && @item.memo ? @item.memo.gsub('<br/>', "\n") : '' %></textarea></td>
     </tr>
     <tr>
       <td></td>

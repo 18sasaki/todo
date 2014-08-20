@@ -51,9 +51,11 @@ get '/post/?:id?' do
 end
 
 post '/post/?:id?' do
+  gsubbed_memo = params[:memo].gsub(/\r\n/, '<br/>')
+
   if target_id = params[:id]
     @item = Item.get(target_id)
-    @item.update(:content => params[:content], :memo => params[:memo])
+    @item.update(:content => params[:content], :memo => gsubbed_memo)
     ItemTag.all(:item_id => target_id).each do |item_tag_data|
       # if exist tag_id : delete from [tag_ids], or not : destroy ItemTag
       unless params[:tag_ids].delete(item_tag_data.tag_id)
@@ -64,7 +66,7 @@ post '/post/?:id?' do
       ItemTag.create(:item_id => target_id, :tag_id => new_tag_id)
     end
   else
-    created_item = Item.create(:content => params[:content], :memo => params[:memo], :created => Time.now)
+    created_item = Item.create(:content => params[:content], :memo => gsubbed_memo, :created => Time.now)
     (params[:tag_ids] || []).each do |tag_id|
       ItemTag.create(:item_id => created_item.id, :tag_id => tag_id)
     end
