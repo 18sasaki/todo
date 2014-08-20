@@ -1,4 +1,16 @@
-﻿<form action=<%= @form_action %> class="form-inline" method="POST">
+﻿<script type="text/javascript">
+  <!--//
+  $(function() {
+    $('#clear_btn').click(function() {
+      $('.tag_checkbox').each(function() {
+        this.checked = false;
+      });
+    });
+  });
+  -->
+</script>
+
+<form action=<%= @form_action %> class="form-inline" method="POST">
   <table class="table">
     <tr>
       <td align='right'>tag: </td>
@@ -14,6 +26,7 @@
                   <label style='font-weight:normal'>
                     &nbsp;
                     <input type="checkbox"
+                           class="tag_checkbox"
                            name="tag_ids[]"
                            value=<%= tag.id %>
                            <%= 'checked' if (@tag_ids && @tag_ids.include?(tag.id)) %>>
@@ -23,6 +36,17 @@
               </td>
             </tr>
           <% end %>
+          <tr>
+            <td></td>
+            <td>
+              <label style='font-weight:normal'>
+                &nbsp;
+                <span class="btn btn-xs btn-danger" id="clear_btn">
+                  チェックを外す
+                </span>
+              </label>
+            </td>
+          </tr>
         </table>
       </td>
     </tr>
