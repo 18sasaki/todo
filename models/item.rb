@@ -42,7 +42,7 @@ get '/post/?:id?' do
     @title = "Edit todo item"
     @form_action = "/post/#{target_id}"
   else
-    @tag_ids = session[:target_tag_ids].collect(&:to_i)
+    @tag_ids = (session[:target_tag_ids] || []).collect(&:to_i)
 
     @title = "Add todo item"
     @form_action = "/post"
