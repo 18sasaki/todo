@@ -74,7 +74,7 @@
           <%= tag_map[item_tag.tag_id] %>
         </span>
       <% end %>
-      <span class="item" title='<%= item[:memo] %>'>
+      <span class="item" title="<%= item[:memo] %>">
         <%= item[:done] ? "<del>#{item[:content]}</del>" : item[:content] %>
       </span>
       <span class="pull-right">
