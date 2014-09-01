@@ -56,6 +56,7 @@ post '/post/?:id?' do
   if target_id = params[:id]
     @item = Item.get(target_id)
     @item.update(:content => params[:content], :memo => gsubbed_memo)
+    @item.update(:done => true) if params[:done_post]
     ItemTag.all(:item_id => target_id).each do |item_tag_data|
       # if exist tag_id : delete from [tag_ids], or not : destroy ItemTag
       unless params[:tag_ids].delete(item_tag_data.tag_id)

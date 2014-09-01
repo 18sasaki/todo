@@ -60,7 +60,12 @@
     </tr>
     <tr>
       <td></td>
-      <td><button type="submit" class="btn">Post</button></td>
+      <td>
+        <button type="submit" class="btn" name='post'>Post</button>
+        <% if @item && !@item.done %>
+          <button type="submit" class="btn" name='done_post'>Done & Post</button>
+        <% end %>
+      </td>
     </tr>
   </table>
 </form>
