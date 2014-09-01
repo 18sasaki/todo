@@ -66,7 +66,7 @@
 
 <h4><%= @items.size %>件</h4>
 
-<ul id="todo-list" class="unstyled">
+<ul id="todo-list" class="list">
   <% @items.each do |item| %>
     <li id="<%= item[:id] %>">
       <% item.item_tags.each do |item_tag| %>
