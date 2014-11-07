@@ -5,6 +5,7 @@ get '/status' do
 end
 
 get '/status/post/?:id?' do
+  @all_statuses = Status.all
   if target_id = params[:id]
     @status = Status.get(target_id)
 
@@ -18,11 +19,13 @@ get '/status/post/?:id?' do
 end
 
 post '/status/post/?:id?' do
+  update_params = { name: params[:name], next_ids: params[:next_ids].join(',') }
+
   if target_id = params[:id]
     @status = Status.get(target_id)
-    @status.update(:name => params[:name])
+    @status.update(update_params)
   else
-    Status.create(:name => params[:name])
+    Status.create(update_params)
   end
   redirect '/status'
 end

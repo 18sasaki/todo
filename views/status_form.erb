@@ -1,4 +1,23 @@
 ﻿<form action=<%= @form_action %> class="form-inline" method="POST">
   <input type="text" placeholder="Status name" name="name" style='width:200px' value=<%= @status ? @status.name : '' %>>
+    <table>
+      <tr>
+        <td>To Status</td>
+        <td>
+          <% @all_statuses.each do |status| %>
+            <% next if (@status && status.id == @status.id) %>
+            <label style='font-weight:normal'>
+              &nbsp;
+              <input type="checkbox"
+                     class="next_id_checkbox"
+                     name="next_ids[]"
+                     value=<%= status.id %>
+                     <%= 'checked' if (status.next_ids.try(:split, ',').try(:include?, status.id)) %>>
+              <%= status.name %>
+            </label>
+          <% end %>
+        </td>
+      </tr>
+    </table>
   <button type="submit" class="btn">Post</button>
 </form>

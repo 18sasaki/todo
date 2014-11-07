@@ -5,6 +5,9 @@
       <span class="item">
         <%= status[:name] %>
       </span>
+      <span class="item">
+        <%= status[:next_ids] %>
+      </span>
       <span class="pull-right">
         <form action="/status/delete/<%= status[:id] %>" method="post">
           <a href="/status/post/<%= status[:id] %>" class="btn btn-warning">Edit</a>
