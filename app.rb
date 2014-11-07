@@ -53,7 +53,7 @@ class Status
   include DataMapper::Resource
   property :id, Serial
   property :name, Text, :required => true
-  property :next_ids, Text
+  property :next_ids, Text, :default => ''
 end
 DataMapper.finalize.auto_upgrade!
 

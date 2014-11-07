@@ -1,6 +1,10 @@
 
 get '/status' do
-  @statuses = Status.all
+  @status_set = {}.tap do |status_set|
+                  Status.all.each do |status|
+                    status_set[status.id.to_s] = status
+                  end
+                end
   erb :status_list
 end
 
@@ -19,7 +23,7 @@ get '/status/post/?:id?' do
 end
 
 post '/status/post/?:id?' do
-  update_params = { name: params[:name], next_ids: params[:next_ids].join(',') }
+  update_params = { name: params[:name], next_ids: (params[:next_ids].try(:join, ',') || '') }
 
   if target_id = params[:id]
     @status = Status.get(target_id)

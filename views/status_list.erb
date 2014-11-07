@@ -1,12 +1,19 @@
 ﻿<a href="/status/post" class="btn btn-primary">Add status</a>
 <ul id="status-list" class="list">
-  <% @statuses.each do |status| %>
+  <% @status_set.each do |id, status| %>
     <li id="<%= status[:id] %>">
-      <span class="item">
-        <%= status[:name] %>
+      <span class="status">
+        <a href="/status/post/<%= status[:id] %>" class="btn btn-info", style='width:100px;'>
+          <%= status[:name] %>
+        </a>
       </span>
-      <span class="item">
-        <%= status[:next_ids] %>
+      ->
+      <span class="next_status">
+        <% status[:next_ids].split(',').each do |next_id| %>
+          <a href="/status/post/<%= next_id %>" class="btn btn-success", style='width:100px;'>
+            <%= @status_set[next_id].name %>
+          </a>
+        <% end %>
       </span>
       <span class="pull-right">
         <form action="/status/delete/<%= status[:id] %>" method="post">

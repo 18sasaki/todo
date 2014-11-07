@@ -12,7 +12,7 @@
                      class="next_id_checkbox"
                      name="next_ids[]"
                      value=<%= status.id %>
-                     <%= 'checked' if (@status.next_ids && @status.next_ids.split(',').include?(status.id.to_s)) %>>
+                     <%= 'checked' if (@status && @status.next_ids.split(',').include?(status.id.to_s)) %>>
               <%= status.name %>
             </label>
           <% end %>
