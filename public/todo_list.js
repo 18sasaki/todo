@@ -18,17 +18,21 @@ $(document).ready(function() {
           });
         }
       });
-      e.preventDefault();
-    });
+    e.preventDefault();
+  });
 
   $(".delete").click(function(e) {
-    var item_id = $(this).parents('li').attr('id');
-    $.ajax({
-      type: "POST",
-      url: "/delete/" + item_id,
-      }).done(function(data) {
-        $("#" + data.id).hide();
-      });
+    if (confirm('destroy OK?')) {
+      var item_id = $(this).parents('li').attr('id');
+      var item_count = $('#item_count').html();
+      $.ajax({
+        type: "POST",
+        url: "/delete/" + item_id,
+        }).done(function(data) {
+          $("#" + data.id).hide();
+          $('#item_count').text(item_count - 1);
+        });
       e.preventDefault();
-    });
+    }
   });
+});

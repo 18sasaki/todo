@@ -64,7 +64,7 @@
   </table>
 </form>
 
-<h4><%= @items.size %>件</h4>
+<h4><span id='item_count'><%= @items.size %></span>件</h4>
 
 <ul id="todo-list" class="list">
   <% @items.each do |item| %>
@@ -80,7 +80,7 @@
       <span class="pull-right">
         <a href="#" class="btn done"><%= item[:done] ? "Not done" : "Done"%></a>
         <a href="/post/<%= item[:id] %>" class="btn btn-warning">Edit</a>
-        <a href="#" class="btn btn-danger delete"onClick="return confirm('destroy OK?');">new Delete</a>
+        <a href="#" class="btn btn-danger delete">Delete</a>
       </span>
     </li>
   <% end %>
