@@ -80,7 +80,8 @@ post '/delete/:id' do
   ItemTag.all(:item_id => params[:id]).each do |item_tag_data|
     item_tag_data.destroy
   end
-  redirect '/'
+  content_type 'application/json'
+  { id: params[:id] }.to_json
 end
 
 post '/done' do

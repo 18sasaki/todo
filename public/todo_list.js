@@ -20,4 +20,15 @@ $(document).ready(function() {
       });
       e.preventDefault();
     });
+
+  $(".delete").click(function(e) {
+    var item_id = $(this).parents('li').attr('id');
+    $.ajax({
+      type: "POST",
+      url: "/delete/" + item_id,
+      }).done(function(data) {
+        $("#" + data.id).hide();
+      });
+      e.preventDefault();
+    });
   });
