@@ -35,6 +35,21 @@ post '/status/post/?:id?' do
 end
 
 post '/status/delete/:id' do
+  Status.delete_from_next_ids(params[:id])
   Status.get(params[:id]).destroy
+
   redirect '/status'
+end
+
+class Status
+  def self.delete_from_next_ids(target_id)
+    Status.all.each do |status|
+      next if status.id == target_id
+      next_id_list = status.next_ids.split(',')
+      if next_id_list.delete(target_id)
+        status.next_ids = next_id_list.join(',')
+        status.save
+      end
+    end
+  end
 end

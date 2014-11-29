@@ -1,5 +1,5 @@
 ﻿<form action=<%= @form_action %> class="form-inline" method="POST">
-  <input type="text" placeholder="Status name" name="name" style='width:200px' value=<%= @status ? @status.name : '' %>>
+  <input type="text" placeholder="Status name" name="name" style='width:200px' value='<%= @status && @status.name %>'>
     <% if @all_statuses.size > 0 %>
       <table>
         <tr>
