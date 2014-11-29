@@ -15,54 +15,56 @@
   -->
 </script>
 
-<a href="/post" class="btn btn-primary">Add todo item</a>
+<% if @tag_set.size > 0 %>
+  <a href="/post" class="btn btn-primary">Add todo item</a>
 
-<form action='/' name='click_tag' method="post">
-  <input type='hidden' id='other_tag_ids' name='other_tag_ids' value='<%= @target_tag_ids.join(',') %>'>
-  <input type='hidden' id='clicked_tag_id' name='clicked_tag_id'>
-  <table>
-    <% @tag_set.each do |tag_style, tag_list| %>
+  <form action='/' name='click_tag' method="post">
+    <input type='hidden' id='other_tag_ids' name='other_tag_ids' value='<%= @target_tag_ids.join(',') %>'>
+    <input type='hidden' id='clicked_tag_id' name='clicked_tag_id'>
+    <table>
+      <% @tag_set.each do |tag_style, tag_list| %>
+        <tr>
+          <td style='background-color:<%= tag_style.color %>;' align='right'>
+            <%= tag_style.name %>&nbsp;
+          </td>
+          <td>
+            <% tag_list.each do |tag| %>
+              <label style='font-weight:normal'>
+                &nbsp;
+                <input type="checkbox"
+                       id='<%= tag.id %>'
+                       value='<%= tag.id %>'
+                       <%= 'checked' if @target_tag_ids.include?(tag.id.to_s) %>
+                       onclick='$("#clicked_tag_id").val(<%= tag.id %>);submit();'>
+                <%= tag.name %>
+              </label>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
       <tr>
-        <td style='background-color:<%= tag_style.color %>;' align='right'>
-          <%= tag_style.name %>&nbsp;
-        </td>
+        <td></td>
         <td>
-          <% tag_list.each do |tag| %>
-            <label style='font-weight:normal'>
-              &nbsp;
-              <input type="checkbox"
-                     id='<%= tag.id %>'
-                     value='<%= tag.id %>'
-                     <%= 'checked' if @target_tag_ids.include?(tag.id.to_s) %>
-                     onclick='$("#clicked_tag_id").val(<%= tag.id %>);submit();'>
-              <%= tag.name %>
-            </label>
-          <% end %>
+          <label style='font-weight:normal'>
+            &nbsp;
+            <input type="checkbox"
+                   name="with_done_flg"
+                   value='<%= @with_done_flg %>'
+                   <%= 'checked' if @with_done_flg %>
+                   onclick='submit();'>
+            完了済も表示する
+          </label>
+          <label style='font-weight:normal'>
+            &nbsp;
+            <span class="btn btn-xs btn-danger" id="clear_btn" <%= 'disabled' if (@target_tag_ids.empty? && !@with_done_flg) %>>
+              チェックを外す
+            </span>
+          </label>
         </td>
       </tr>
-    <% end %>
-    <tr>
-      <td></td>
-      <td>
-        <label style='font-weight:normal'>
-          &nbsp;
-          <input type="checkbox"
-                 name="with_done_flg"
-                 value='<%= @with_done_flg %>'
-                 <%= 'checked' if @with_done_flg %>
-                 onclick='submit();'>
-          完了済も表示する
-        </label>
-        <label style='font-weight:normal'>
-          &nbsp;
-          <span class="btn btn-xs btn-danger" id="clear_btn" <%= 'disabled' if (@target_tag_ids.empty? && !@with_done_flg) %>>
-            チェックを外す
-          </span>
-        </label>
-      </td>
-    </tr>
-  </table>
-</form>
+    </table>
+  </form>
+<% end %>
 
 <h4><span id='item_count'><%= @items.size %></span>件</h4>
 

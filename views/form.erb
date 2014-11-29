@@ -15,39 +15,41 @@
     <tr>
       <td align='right'>tag: </td>
       <td>
-        <table>
-          <% @tag_set.each do |tag_style, tag_list| %>
+        <% if @tag_set.size > 0 %>
+          <table>
+            <% @tag_set.each do |tag_style, tag_list| %>
+              <tr>
+                <td style='background-color:<%= tag_style.color %>;' align='right'>
+                  <%= tag_style.name %>&nbsp;
+                </td>
+                <td>
+                  <% tag_list.each do |tag| %>
+                    <label style='font-weight:normal'>
+                      &nbsp;
+                      <input type="checkbox"
+                             class="tag_checkbox"
+                             name="tag_ids[]"
+                             value=<%= tag.id %>
+                             <%= 'checked' if (@tag_ids && @tag_ids.include?(tag.id)) %>>
+                      <%= tag.name %>
+                    </label>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
             <tr>
-              <td style='background-color:<%= tag_style.color %>;' align='right'>
-                <%= tag_style.name %>&nbsp;
-              </td>
+              <td></td>
               <td>
-                <% tag_list.each do |tag| %>
-                  <label style='font-weight:normal'>
-                    &nbsp;
-                    <input type="checkbox"
-                           class="tag_checkbox"
-                           name="tag_ids[]"
-                           value=<%= tag.id %>
-                           <%= 'checked' if (@tag_ids && @tag_ids.include?(tag.id)) %>>
-                    <%= tag.name %>
-                  </label>
-                <% end %>
+                <label style='font-weight:normal'>
+                  &nbsp;
+                  <span class="btn btn-xs btn-danger" id="clear_btn">
+                    チェックを外す
+                  </span>
+                </label>
               </td>
             </tr>
-          <% end %>
-          <tr>
-            <td></td>
-            <td>
-              <label style='font-weight:normal'>
-                &nbsp;
-                <span class="btn btn-xs btn-danger" id="clear_btn">
-                  チェックを外す
-                </span>
-              </label>
-            </td>
-          </tr>
-        </table>
+          </table>
+        <% end %>
       </td>
     </tr>
     <tr>
